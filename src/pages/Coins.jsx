@@ -1,88 +1,71 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Coins as CoinsIcon, TrendingUp, Gift, History } from 'lucide-react'
-import { supabase } from '../lib/supabase'
 import CoinTransaction from '../components/CoinTransaction'
 import RedeemModal from '../components/RedeemModal'
 
 function Coins() {
-  const [transactions, setTransactions] = useState([])
-  const [balance, setBalance] = useState(1250)
+  const [balance] = useState(1250)
   const [isRedeemModalOpen, setIsRedeemModalOpen] = useState(false)
 
-  useEffect(() => {
-    fetchTransactions()
-  }, [])
-
-  const fetchTransactions = async () => {
-    const { data } = await supabase
-      .from('coin_transactions')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (data && data.length > 0) {
-      setTransactions(data)
-    } else {
-      setTransactions([
-        {
-          id: '1',
-          amount: 200,
-          transaction_type: 'hackathon',
-          description: 'Hackathon 2024 Participation',
-          created_at: new Date('2025-11-01T10:30:00')
-        },
-        {
-          id: '2',
-          amount: 100,
-          transaction_type: 'workshop',
-          description: 'AI Workshop Completion',
-          created_at: new Date('2025-10-25T14:00:00')
-        },
-        {
-          id: '3',
-          amount: 75,
-          transaction_type: 'event',
-          description: 'Cloud Computing Event Attendance',
-          created_at: new Date('2025-10-20T16:30:00')
-        },
-        {
-          id: '4',
-          amount: -200,
-          transaction_type: 'redemption',
-          description: 'Redeemed Coffee Voucher',
-          created_at: new Date('2025-10-15T12:00:00')
-        },
-        {
-          id: '5',
-          amount: 50,
-          transaction_type: 'event',
-          description: 'Web Development Workshop',
-          created_at: new Date('2025-10-10T11:00:00')
-        },
-        {
-          id: '6',
-          amount: 150,
-          transaction_type: 'hackathon',
-          description: 'Mini Hackathon Winner',
-          created_at: new Date('2025-10-05T18:00:00')
-        },
-        {
-          id: '7',
-          amount: 60,
-          transaction_type: 'workshop',
-          description: 'Cybersecurity Fundamentals',
-          created_at: new Date('2025-09-28T15:30:00')
-        },
-        {
-          id: '8',
-          amount: 80,
-          transaction_type: 'event',
-          description: 'Mobile App Development Seminar',
-          created_at: new Date('2025-09-20T13:00:00')
-        }
-      ])
+  const transactions = [
+    {
+      id: '1',
+      amount: 200,
+      transaction_type: 'hackathon',
+      description: 'Hackathon 2024 Participation',
+      created_at: new Date('2025-11-01T10:30:00')
+    },
+    {
+      id: '2',
+      amount: 100,
+      transaction_type: 'workshop',
+      description: 'AI Workshop Completion',
+      created_at: new Date('2025-10-25T14:00:00')
+    },
+    {
+      id: '3',
+      amount: 75,
+      transaction_type: 'event',
+      description: 'Cloud Computing Event Attendance',
+      created_at: new Date('2025-10-20T16:30:00')
+    },
+    {
+      id: '4',
+      amount: -200,
+      transaction_type: 'redemption',
+      description: 'Redeemed Coffee Voucher',
+      created_at: new Date('2025-10-15T12:00:00')
+    },
+    {
+      id: '5',
+      amount: 50,
+      transaction_type: 'event',
+      description: 'Web Development Workshop',
+      created_at: new Date('2025-10-10T11:00:00')
+    },
+    {
+      id: '6',
+      amount: 150,
+      transaction_type: 'hackathon',
+      description: 'Mini Hackathon Winner',
+      created_at: new Date('2025-10-05T18:00:00')
+    },
+    {
+      id: '7',
+      amount: 60,
+      transaction_type: 'workshop',
+      description: 'Cybersecurity Fundamentals',
+      created_at: new Date('2025-09-28T15:30:00')
+    },
+    {
+      id: '8',
+      amount: 80,
+      transaction_type: 'event',
+      description: 'Mobile App Development Seminar',
+      created_at: new Date('2025-09-20T13:00:00')
     }
-  }
+  ]
 
   const stats = [
     {
@@ -114,13 +97,14 @@ function Coins() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-3xl font-bold text-white mb-2">NSDC Coins</h1>
-        <p className="text-gray-400">Track and redeem your earned coins</p>
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">NSDC Coins</h1>
+        <p className="text-gray-400 text-sm md:text-base">Track and redeem your earned coins</p>
       </motion.div>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ scale: 1.02 }}
         className="glass-card p-8 border-2 border-yellow-400/30 bg-gradient-to-br from-yellow-400/10 to-orange-400/10"
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -151,7 +135,8 @@ function Coins() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="glass-card p-6"
+            whileHover={{ scale: 1.05, y: -3 }}
+            className="glass-card p-6 cursor-pointer"
           >
             <div className="flex items-center gap-4">
               <div className={`p-3 rounded-xl ${stat.bgColor}`}>

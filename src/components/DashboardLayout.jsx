@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -15,6 +15,11 @@ import {
 function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [location])
 
   const navigation = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -36,8 +41,13 @@ function DashboardLayout() {
       >
         <div className="flex flex-col h-full">
           <div className="p-6 border-b border-white/10">
-            <div className="flex items-center justify-between lg:justify-center">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            <div className="flex items-center justify-between lg:justify-center gap-3">
+              <img
+                src="/nsdc_logo.jpg"
+                alt="NSDC Logo"
+                className="w-10 h-10 object-contain rounded-full"
+              />
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                 NSDC JHSC
               </h1>
               <button
@@ -54,7 +64,6 @@ function DashboardLayout() {
               <NavLink
                 key={item.path}
                 to={item.path}
-                onClick={() => setSidebarOpen(false)}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${
                     isActive
@@ -112,27 +121,41 @@ function DashboardLayout() {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="sticky top-0 z-30 glass-card border-b border-white/10 backdrop-blur-xl">
           <div className="flex items-center justify-between px-4 lg:px-8 py-4">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
 
-            <div className="flex-1 lg:flex-none" />
+              <div className="hidden lg:flex items-center gap-3">
+                <img
+                  src="/nsdc_logo.jpg"
+                  alt="NSDC Logo"
+                  className="w-10 h-10 object-contain rounded-full"
+                />
+              </div>
+            </div>
 
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-2 px-4 py-2 glass-card rounded-full">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="hidden sm:flex items-center gap-2 px-4 py-2 glass-card rounded-full cursor-pointer"
+              >
                 <Coins className="w-5 h-5 text-yellow-400" />
                 <span className="font-semibold text-yellow-400">1,250</span>
-              </div>
+              </motion.div>
 
-              <div className="flex items-center gap-3 px-4 py-2 glass-card rounded-full hover:bg-white/10 transition-colors cursor-pointer">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-3 px-4 py-2 glass-card rounded-full hover:bg-white/10 transition-colors cursor-pointer"
+              >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
                   <User className="w-5 h-5 text-white" />
                 </div>
                 <span className="hidden md:block font-medium">John Doe</span>
-              </div>
+              </motion.div>
             </div>
           </div>
         </header>

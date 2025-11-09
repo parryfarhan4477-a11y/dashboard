@@ -1,99 +1,87 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Search, Filter } from 'lucide-react'
-import { supabase } from '../lib/supabase'
 import EventCard from '../components/EventCard'
 
 function Events() {
-  const [events, setEvents] = useState([])
   const [filter, setFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
 
-  useEffect(() => {
-    fetchEvents()
-  }, [filter])
+  const allEvents = useMemo(() => [
+    {
+      id: '1',
+      title: 'Web Development Workshop',
+      description: 'Learn modern web development with React and Node.js. Build full-stack applications from scratch.',
+      event_date: new Date('2025-12-15T14:00:00'),
+      location: 'Tech Lab, Building A',
+      image_url: 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg',
+      coins_reward: 50,
+      status: 'upcoming'
+    },
+    {
+      id: '2',
+      title: 'AI & Machine Learning Bootcamp',
+      description: 'Dive into artificial intelligence and machine learning fundamentals. Hands-on projects included.',
+      event_date: new Date('2025-12-20T10:00:00'),
+      location: 'Conference Hall, Main Campus',
+      image_url: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg',
+      coins_reward: 100,
+      status: 'upcoming'
+    },
+    {
+      id: '3',
+      title: 'Hackathon 2025',
+      description: '24-hour coding challenge with amazing prizes. Team up and build innovative solutions.',
+      event_date: new Date('2025-12-25T09:00:00'),
+      location: 'Innovation Center',
+      image_url: 'https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg',
+      coins_reward: 200,
+      status: 'upcoming'
+    },
+    {
+      id: '4',
+      title: 'Cloud Computing Workshop',
+      description: 'Master AWS, Azure, and Google Cloud platforms. Get hands-on with cloud deployments.',
+      event_date: new Date('2025-11-05T13:00:00'),
+      location: 'Lab 3, IT Building',
+      image_url: 'https://images.pexels.com/photos/1181271/pexels-photo-1181271.jpeg',
+      coins_reward: 75,
+      status: 'completed'
+    },
+    {
+      id: '5',
+      title: 'Cybersecurity Fundamentals',
+      description: 'Learn essential cybersecurity concepts and protect digital assets effectively.',
+      event_date: new Date('2025-10-20T11:00:00'),
+      location: 'Security Lab, Building B',
+      image_url: 'https://images.pexels.com/photos/60504/security-protection-anti-virus-software-60504.jpeg',
+      coins_reward: 60,
+      status: 'completed'
+    },
+    {
+      id: '6',
+      title: 'Mobile App Development',
+      description: 'Build native and cross-platform mobile applications. iOS and Android covered.',
+      event_date: new Date('2025-12-18T15:00:00'),
+      location: 'Mobile Dev Lab',
+      image_url: 'https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg',
+      coins_reward: 80,
+      status: 'upcoming'
+    }
+  ], [])
 
-  const fetchEvents = async () => {
-    let query = supabase.from('events').select('*').order('event_date', { ascending: true })
+  const filteredEvents = useMemo(() => {
+    let events = allEvents
 
     if (filter !== 'all') {
-      query = query.eq('status', filter)
+      events = events.filter(e => e.status === filter)
     }
 
-    const { data } = await query
-
-    if (data && data.length > 0) {
-      setEvents(data)
-    } else {
-      setEvents([
-        {
-          id: '1',
-          title: 'Web Development Workshop',
-          description: 'Learn modern web development with React and Node.js. Build full-stack applications from scratch.',
-          event_date: new Date('2025-12-15T14:00:00'),
-          location: 'Tech Lab, Building A',
-          image_url: 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg',
-          coins_reward: 50,
-          status: 'upcoming'
-        },
-        {
-          id: '2',
-          title: 'AI & Machine Learning Bootcamp',
-          description: 'Dive into artificial intelligence and machine learning fundamentals. Hands-on projects included.',
-          event_date: new Date('2025-12-20T10:00:00'),
-          location: 'Conference Hall, Main Campus',
-          image_url: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg',
-          coins_reward: 100,
-          status: 'upcoming'
-        },
-        {
-          id: '3',
-          title: 'Hackathon 2025',
-          description: '24-hour coding challenge with amazing prizes. Team up and build innovative solutions.',
-          event_date: new Date('2025-12-25T09:00:00'),
-          location: 'Innovation Center',
-          image_url: 'https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg',
-          coins_reward: 200,
-          status: 'upcoming'
-        },
-        {
-          id: '4',
-          title: 'Cloud Computing Workshop',
-          description: 'Master AWS, Azure, and Google Cloud platforms. Get hands-on with cloud deployments.',
-          event_date: new Date('2025-11-05T13:00:00'),
-          location: 'Lab 3, IT Building',
-          image_url: 'https://images.pexels.com/photos/1181271/pexels-photo-1181271.jpeg',
-          coins_reward: 75,
-          status: 'completed'
-        },
-        {
-          id: '5',
-          title: 'Cybersecurity Fundamentals',
-          description: 'Learn essential cybersecurity concepts and protect digital assets effectively.',
-          event_date: new Date('2025-10-20T11:00:00'),
-          location: 'Security Lab, Building B',
-          image_url: 'https://images.pexels.com/photos/60504/security-protection-anti-virus-software-60504.jpeg',
-          coins_reward: 60,
-          status: 'completed'
-        },
-        {
-          id: '6',
-          title: 'Mobile App Development',
-          description: 'Build native and cross-platform mobile applications. iOS and Android covered.',
-          event_date: new Date('2025-12-18T15:00:00'),
-          location: 'Mobile Dev Lab',
-          image_url: 'https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg',
-          coins_reward: 80,
-          status: 'upcoming'
-        }
-      ])
-    }
-  }
-
-  const filteredEvents = events.filter(event =>
-    event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    event.description.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+    return events.filter(event =>
+      event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.description.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }, [allEvents, filter, searchQuery])
 
   const filterOptions = [
     { value: 'all', label: 'All Events' },
@@ -108,8 +96,8 @@ function Events() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-3xl font-bold text-white mb-2">Events</h1>
-        <p className="text-gray-400">Discover and register for exciting events</p>
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Events</h1>
+        <p className="text-gray-400 text-sm md:text-base">Discover and register for exciting events</p>
       </motion.div>
 
       <div className="flex flex-col sm:flex-row gap-4">
